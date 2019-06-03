@@ -16,29 +16,25 @@ Creep.prototype.run = function () {
 
 Creep.prototype.get_energy = function () {
     let sources = [];
+    let source;
     let memory = this.room.memory;
 
     sources = sources.concat(this.get_container());
-
-    if (memory.link !== undefined) {
-        sources = sources.concat(this.room.memory.link.filter(function (item) {
-            if (item.type === "send") {
-                return false;
-            }
-            let link = Game.getObjectById(item.id);
-            return link.energy > 0;
-        }));
-    }
-    if (memory.storage !== undefined) {
-        let storage = Game.getObjectById(this.room.memory.storage);
-        if (storage.store[RESOURCE_ENERGY] > 0) {
-            sources = sources.concat(storage);
+    sources = sources.concat(this.get_receive_link());
+    sources = sources.concat(this.get_storage());
+    if (sources.length > 0) {
+        console.log(sources.length);
+        source = this.pos.findClosestByPath(sources);
+        console.log(source.pos);
+        if (this.withdraw(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            this.moveTo(source);
+        }
+    } else {
+        source = this.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+        if (this.harvest(source) == ERR_NOT_IN_RANGE) {
+            this.moveTo(source);
         }
     }
-    //console.log(sources[0]);
-    let source = this.pos.findClosestByPath(sources);
-    //console.log(source);
-    this.moveTo(source);
 };
 
 Creep.prototype.get_container = function () {
@@ -54,4 +50,31 @@ Creep.prototype.get_container = function () {
         }
     }
     return containers;
+};
+
+Creep.prototype.get_storage = function () {
+    let storage_id = this.room.memory.storage;
+    if (storage_id === undefined) {
+        return [];
+    }
+    let storage = Game.getObjectById(storage_id);
+    if (storage.store[RESOURCE_ENERGY] > 0) {
+        return [storage];
+    }
+    return [];
+};
+
+Creep.prototype.get_receive_link = function () {
+    if (this.room.memory.link === undefined) {
+        return [];
+    }
+    let link_id = this.room.memory.link["receive"];
+    let links = [];
+    for (let id of link_id) {
+        let link = Game.getObjectById(id);
+        if (link.energy > 0) {
+            links.push(link);
+        }
+    }
+    return links;
 };

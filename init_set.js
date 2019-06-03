@@ -5,11 +5,12 @@ module.exports = {
 };
 
 /**
- * Memory.rooms[room_name]: 
+ * Memory.rooms[room_name]:
+ * @min_creeps {number}
  * @wall_hits {min:number,max:number}
  * @container {list:{id}}
  * @storage {id}
- * @link {list:{id,type:{receive,send}}}
+ * @link {receive:{list:{id}},send:{list:{id}}}
  */
 function init_memory(room) {
     init_memory_wall_hits(room);
@@ -27,12 +28,12 @@ function init_memory_wall_hits(room) {
 }
 
 function init_memory_container(room) {
-    room.memory.container = [];
     let containers = room.find(FIND_STRUCTURES,
-        {filter: s => s.structureType == STRUCTURE_CONTAINER});
-    if (containers === undefined) {
+        {filter: s => s.structureType === STRUCTURE_CONTAINER});
+    if (containers.length == 0) {
         return;
     }
+    room.memory.container = [];
     for (let container of containers) {
         /*
         let temp = {
@@ -49,19 +50,22 @@ function init_memory_container(room) {
 function init_memory_storage(room) {
     let storage = room.find(FIND_MY_STRUCTURES,
         {filter: s => s.structureType == STRUCTURE_STORAGE});
-    if (storage !== undefined) {
+    if (storage.length > 0) {
         room.memory.storage = storage[0].id;
     }
 
 }
 
 function init_memory_link(room) {
-    room.memory.link = [];
     let links = room.find(FIND_STRUCTURES,
         {filter: s => s.structureType == STRUCTURE_LINK});
-    if (links === undefined) {
+    if (links.length == 0) {
         return;
     }
+    room.memory.link = {
+        receive: [],
+        send: []
+    };
     for (let link of links) {
         let type = "send";
         let storage = link.pos.findInRange(FIND_MY_STRUCTURES, 2,
@@ -69,11 +73,6 @@ function init_memory_link(room) {
         if (storage.length > 0) {
             type = "receive";
         }
-        let temp = {
-            id: link.id,
-            type: type
-        };
-        room.memory.link.push(temp);
+        room.memory.link[type].push(link.id);
     }
-
 }
