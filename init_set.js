@@ -5,7 +5,7 @@ module.exports = {
 };
 
 /**
- * Memory.rooms[room_name]:
+ * Memory.rooms[room_name]: 
  * @wall_hits {min:number,max:number}
  * @container {list:{id}}
  * @storage {id}
