@@ -1,14 +1,16 @@
 require("prototype.spawn")();
+require("prototype.creep");
+var init_set=require("init_set");
 var role_harvester = require("role.harvester");
 var role_upgrader = require("role.upgrader");
 var role_builder = require("role.builder");
 var role_repairer = require("role.repairer");
 var role_wall_repairer = require("role.wallRepairer");
 
-var home = "E11S2";
+var home = "sim";//"E11S2";
 
 module.exports.loop = function () {
-
+    init_set.run(Game.rooms["sim"]);
     for (let name in Memory.creeps) {
         if (Game.creeps[name] == undefined) {
             delete Memory.creeps[name];
@@ -17,18 +19,7 @@ module.exports.loop = function () {
 
     // for every creep name in Game.creeps
     for (let name in Game.creeps) {
-        var creep = Game.creeps[name];
-        if (creep.memory.role == "harvester") {
-            role_harvester.run(creep);
-        } else if (creep.memory.role == "upgrader") {
-            role_upgrader.run(creep);
-        } else if (creep.memory.role == "builder") {
-            role_builder.run(creep);
-        } else if (creep.memory.role == "repairer") {
-            role_repairer.run(creep);
-        } else if (creep.memory.role == "wall_repairer") {
-            role_wall_repairer.run(creep);
-        }
+        Game.creeps[name].run();
     }
 
     var towers = Game.rooms[home].find(FIND_STRUCTURES,
