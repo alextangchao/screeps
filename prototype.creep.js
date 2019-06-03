@@ -18,17 +18,8 @@ Creep.prototype.get_energy = function () {
     let sources = [];
     let memory = this.room.memory;
 
-<<<<<<< HEAD
     sources = sources.concat(this.get_container());
 
-=======
-    if (memory.container !== undefined) {
-        sources = sources.concat(memory.container.filter(function (id) {
-            let container = Game.getObjectById(id);
-            return container.store[RESOURCE_ENERGY] > 0;
-        }));
-    }
->>>>>>> V1
     if (memory.link !== undefined) {
         sources = sources.concat(this.room.memory.link.filter(function (item) {
             if (item.type === "send") {
@@ -50,7 +41,6 @@ Creep.prototype.get_energy = function () {
     this.moveTo(source);
 };
 
-<<<<<<< HEAD
 Creep.prototype.get_container = function () {
     let container_id = this.room.memory.container;
     if (container_id === undefined) {
@@ -65,9 +55,3 @@ Creep.prototype.get_container = function () {
     }
     return containers;
 };
-
-=======
-Creep.prototype.get_avai = function () {
-
-};
->>>>>>> V1
