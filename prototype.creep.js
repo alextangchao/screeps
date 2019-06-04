@@ -1,7 +1,7 @@
 var roles = {
     harvester: require("role.harvester"),
-    //miner: require("role.miner"),
-    //carrier: require("role.carrier"),
+    miner: require("role.miner"),
+    carrier: require("role.carrier"),
     upgrader: require("role.upgrader"),
     builder: require("role.builder"),
     repairer: require("role.repairer"),
@@ -9,8 +9,17 @@ var roles = {
 };
 
 Creep.prototype.run = function () {
+    this.update_working_status();
     if (this.memory.role !== undefined) {
         roles[this.memory.role].run(this);
+    }
+};
+
+Creep.prototype.update_working_status = function () {
+    if (this.memory.working === true && this.carry.energy === 0) {
+        this.memory.working = false;
+    } else if (this.memory.working === false && this.carry.energy === this.carryCapacity) {
+        this.memory.working = true;
     }
 };
 
@@ -22,10 +31,11 @@ Creep.prototype.get_energy = function () {
     sources = sources.concat(this.get_container());
     sources = sources.concat(this.get_receive_link());
     sources = sources.concat(this.get_storage());
+
     if (sources.length > 0) {
-        console.log(sources.length);
+        //console.log(sources.length);
         source = this.pos.findClosestByPath(sources);
-        console.log(source.pos);
+        //console.log(source.pos);
         if (this.withdraw(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             this.moveTo(source);
         }

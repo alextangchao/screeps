@@ -45,7 +45,7 @@ module.exports.loop = function () {
     var num_wall_repairer = _.sum(Game.creeps, (c) => c.memory.role == "wall_repairer");
 
     var max_energy = Game.spawns.Spawn1.room.energyCapacityAvailable;
-    max_energy=1200;
+    //max_energy=1200;
     var name = undefined;
 
     if (num_harvester < min_harvester) {

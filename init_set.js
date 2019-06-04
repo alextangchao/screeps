@@ -30,7 +30,8 @@ function init_memory_wall_hits(room) {
 function init_memory_container(room) {
     let containers = room.find(FIND_STRUCTURES,
         {filter: s => s.structureType === STRUCTURE_CONTAINER});
-    if (containers.length == 0) {
+    if (containers.length === 0) {
+        delete room.memory.container;
         return;
     }
     room.memory.container = [];
@@ -49,17 +50,20 @@ function init_memory_container(room) {
 
 function init_memory_storage(room) {
     let storage = room.find(FIND_MY_STRUCTURES,
-        {filter: s => s.structureType == STRUCTURE_STORAGE});
+        {filter: s => s.structureType === STRUCTURE_STORAGE});
     if (storage.length > 0) {
         room.memory.storage = storage[0].id;
+    } else {
+        delete room.memory.storage;
     }
 
 }
 
 function init_memory_link(room) {
     let links = room.find(FIND_STRUCTURES,
-        {filter: s => s.structureType == STRUCTURE_LINK});
-    if (links.length == 0) {
+        {filter: s => s.structureType === STRUCTURE_LINK});
+    if (links.length === 0) {
+        delete room.memory.link;
         return;
     }
     room.memory.link = {
@@ -69,7 +73,7 @@ function init_memory_link(room) {
     for (let link of links) {
         let type = "send";
         let storage = link.pos.findInRange(FIND_MY_STRUCTURES, 2,
-            {filter: s => s.structureType == STRUCTURE_STORAGE});
+            {filter: s => s.structureType === STRUCTURE_STORAGE});
         if (storage.length > 0) {
             type = "receive";
         }
