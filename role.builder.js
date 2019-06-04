@@ -2,6 +2,7 @@ var role_upgrader = require("role.upgrader")
 
 module.exports = {
     run: function (creep) {
+        creep.update_working_status();
         if (creep.memory.working === true) {
             let constructure = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
             if (constructure !== undefined) {

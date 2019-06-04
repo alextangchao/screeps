@@ -6,17 +6,56 @@ module.exports = {
 
 /**
  * Memory.rooms[room_name]:
- * @min_creeps {number}
+ * @creeps {role:number}
  * @wall_hits {min:number,max:number}
+ * @energy_available {list:{object}}
  * @container {list:{id}}
- * @storage {id}
  * @link {receive:{list:{id}},send:{list:{id}}}
  */
 function init_memory(room) {
+    room.memory.energy_available = [];
     init_memory_wall_hits(room);
     init_memory_container(room);
-    init_memory_storage(room);
     init_memory_link(room);
+    init_creeps_num(room);
+}
+
+function init_creeps_num(room) {
+    let min_harvester = 1;
+    let min_carrier = 1;
+    let min_upgrader = 1;
+    let min_builder = 1;
+    let min_repairer = 1;
+    let min_wall_repairer = 1;
+
+    set_min_creeps(room);
+}
+
+function set_min_creeps(room) {
+    room.memory.min_creeps = {};
+    let min_creeps = room.memory.min_creeps;
+
+    min_creeps.harvester = 0;
+    min_creeps.miner = 0;
+    min_creeps.linker = 0;
+    min_creeps.carrier = 0;
+    min_creeps.upgrader = 1;
+    min_creeps.builder = 0;
+    min_creeps.repairer = 0;
+    min_creeps.wall_repairer = 0;
+
+    if (room.memory.container !== undefined) {
+        min_creeps.miner = room.memory.container.length;
+    }
+    if (room.memory.link !== undefined) {
+        min_creeps.linker = room.memory.link.send.length;
+    }
+
+    min_creeps.all_creeps = min_creeps.harvester +
+        min_creeps.miner + min_creeps.linker +
+        min_creeps.carrier + min_creeps.upgrader +
+        min_creeps.builder + min_creeps.repairer +
+        min_creeps.wall_repairer;
 }
 
 function init_memory_wall_hits(room) {
@@ -36,27 +75,8 @@ function init_memory_container(room) {
     }
     room.memory.container = [];
     for (let container of containers) {
-        /*
-        let temp = {
-            id: container.id,
-            room: container.pos.roomName,
-            x: container.pos.x,
-            y: container.pos.y
-        }
-        */
         room.memory.container.push(container.id);
     }
-}
-
-function init_memory_storage(room) {
-    let storage = room.find(FIND_MY_STRUCTURES,
-        {filter: s => s.structureType === STRUCTURE_STORAGE});
-    if (storage.length > 0) {
-        room.memory.storage = storage[0].id;
-    } else {
-        delete room.memory.storage;
-    }
-
 }
 
 function init_memory_link(room) {

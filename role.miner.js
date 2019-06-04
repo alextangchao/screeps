@@ -1,5 +1,3 @@
-var role_upgrader = require("role.upgrader");
-var role_builder = require("role.builder");
 
 module.exports = {
     run: function (creep) {

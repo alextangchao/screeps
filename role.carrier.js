@@ -3,6 +3,7 @@ var role_builder = require("role.builder");
 
 module.exports = {
     run: function (creep) {
+        creep.update_working_status();
         if (creep.memory.working === true) {
             let structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES,
                 {
