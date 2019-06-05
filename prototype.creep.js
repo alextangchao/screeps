@@ -23,11 +23,10 @@ Creep.prototype.update_working_status = function () {
     }
 };
 
-Creep.prototype.get_energy = function () {
+Creep.prototype.get_energy = function (use_container = true, source = undefined) {
     let sources = this.room.memory.energy_available;
-    let source;
 
-    if (sources.length > 0) {
+    if (use_container && sources.length > 0) {
         //console.log(sources.length);
         source = this.pos.findClosestByPath(sources);
         //console.log(source.pos);
@@ -35,7 +34,9 @@ Creep.prototype.get_energy = function () {
             this.moveTo(source);
         }
     } else {
-        source = this.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+        if (source === undefined) {
+            source = this.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+        }
         if (this.harvest(source) === ERR_NOT_IN_RANGE) {
             this.moveTo(source);
         }

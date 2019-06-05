@@ -1,23 +1,20 @@
-
 module.exports = {
+    /**
+     * @source_id
+     * @container_id
+     * @working
+     */
     run: function (creep) {
         if (creep.memory.working === true) {
-            let structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES,
-                {
-                    filter: (s) => (s.structureType === STRUCTURE_SPAWN
-                        || s.structureType === STRUCTURE_EXTENSION
-                        || s.structureType === STRUCTURE_TOWER)
-                        && s.energy < s.energyCapacity
-                });
-            if (structure !== undefined) {
-                if (creep.transfer(structure, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(structure);
-                }
-            } else {
-                role_builder.run(creep);
-            }
+            let source = Game.getObjectById(creep.memory.source_id)
+            creep.harvest(source);
         } else {
-            creep.get_energy();
+            let container = Game.getObjectById(creep.memory.container_id);
+            if (creep.pos.isEqualTo(container)) {
+                creep.memory.work = true;
+            } else {
+                creep.moveTo(container);
+            }
         }
     }
 };

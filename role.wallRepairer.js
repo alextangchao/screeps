@@ -22,7 +22,7 @@ module.exports = {
                 }
             } else {
                 if (min_wall_hits < max_wall_hits) {
-                    creep.room.memory.wall_hits.min += 2000;
+                    creep.room.memory.wall_hits.min = Math.min(min_wall_hits + 2000, max_wall_hits);
                 } else {
                     role_builder.run(creep);
                 }

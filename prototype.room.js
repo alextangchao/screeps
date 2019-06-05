@@ -3,6 +3,7 @@ Room.prototype.cal_energy_available = function () {
     if (sources.length === 0) {
         sources = [].concat(this.get_storage());
     }
+    //console.log(this.name+sources.length);
     this.memory.energy_available = sources;
 };
 

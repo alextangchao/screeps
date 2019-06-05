@@ -6,14 +6,14 @@ module.exports = {
 
 /**
  * Memory.rooms[room_name]:
- * @creeps {role:number}
+ * @min_creeps {role:number}
  * @wall_hits {min:number,max:number}
  * @energy_available {list:{object}}
  * @container {list:{id}}
  * @link {receive:{list:{id}},send:{list:{id}}}
  */
 function init_memory(room) {
-    room.memory.energy_available = [];
+    //room.memory.energy_available = [];
     init_memory_wall_hits(room);
     init_memory_container(room);
     init_memory_link(room);
@@ -21,11 +21,11 @@ function init_memory(room) {
 }
 
 function init_creeps_num(room) {
-    let min_harvester = 1;
+    let min_harvester = 0;
     let min_carrier = 1;
-    let min_upgrader = 1;
-    let min_builder = 1;
-    let min_repairer = 1;
+    let min_upgrader = 0;
+    let min_builder = 0;
+    let min_repairer = 0;
     let min_wall_repairer = 1;
 
     set_min_creeps(room);
@@ -38,8 +38,8 @@ function set_min_creeps(room) {
     min_creeps.harvester = 0;
     min_creeps.miner = 0;
     min_creeps.linker = 0;
-    min_creeps.carrier = 0;
-    min_creeps.upgrader = 1;
+    min_creeps.carrier = 1;
+    min_creeps.upgrader = 0;
     min_creeps.builder = 0;
     min_creeps.repairer = 0;
     min_creeps.wall_repairer = 0;
