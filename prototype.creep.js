@@ -23,7 +23,7 @@ Creep.prototype.update_working_status = function () {
     }
 };
 
-Creep.prototype.get_energy = function (use_container = true, source = undefined) {
+Creep.prototype.get_energy = function (use_container = true, source = undefined, use_source = true) {
     let sources = this.room.memory.energy_available;
 
     if (use_container && sources.length > 0) {
@@ -33,7 +33,7 @@ Creep.prototype.get_energy = function (use_container = true, source = undefined)
         if (this.withdraw(source, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             this.moveTo(source);
         }
-    } else {
+    } else if (use_source) {
         if (source === undefined) {
             source = this.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
         }

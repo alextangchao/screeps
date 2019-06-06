@@ -18,7 +18,7 @@ module.exports = {
                 }
             }
         } else {
-            let source = Game.getObjectById(creep.memory.source);
+            let source = Game.getObjectById(creep.memory.source_id);
             creep.get_energy(false, source);
         }
     }

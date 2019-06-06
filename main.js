@@ -6,16 +6,15 @@ var init_set = require("init_set");
 
 var home = "E11S2";
 
-for (let name in Game.rooms) {
-    init_set.run(Game.rooms[name]);
-}
-
 module.exports.loop = function () {
     clear_memory();
 
     for (let name in Game.rooms) {
-        // run creep logic
-        Game.rooms[name].cal_energy_available();
+        let room = Game.rooms[name];
+        if (room.memory.need_init !== false) {
+            init_set.run(room);
+        }
+        room.cal_energy_available();
     }
 
     // for each creeps
@@ -28,10 +27,16 @@ module.exports.loop = function () {
     for (let name in Game.spawns) {
         // run spawn logic
         Game.spawns[name].run();
+        /*
+        let spawn = Game.spawns[name];
+        if (spawn.room.find(FIND_MY_CREEPS).length !== spawn.room.memory.min_creeps.all_creeps) {
+            spawn.run();
+        }
+        */
     }
 
     // find all towers
-    var towers = _.filter(Game.structures, s => s.structureType === STRUCTURE_TOWER);
+    let towers = _.filter(Game.structures, s => s.structureType === STRUCTURE_TOWER);
     // for each tower
     for (let tower of towers) {
         // run tower logic

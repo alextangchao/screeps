@@ -11,7 +11,7 @@ module.exports = {
         } else {
             let container = Game.getObjectById(creep.memory.container_id);
             if (creep.pos.isEqualTo(container)) {
-                creep.memory.work = true;
+                creep.memory.working = true;
             } else {
                 creep.moveTo(container);
             }
