@@ -1,3 +1,7 @@
+Room.prototype.run = function () {
+    this.cal_energy_available();
+};
+
 Room.prototype.cal_energy_available = function () {
     let sources = [].concat(this.get_container(), this.get_receive_link());
     if (sources.length === 0) {
