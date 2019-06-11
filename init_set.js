@@ -47,11 +47,11 @@ function set_min_creeps(room) {
     min_creeps.repairer = 1;
     min_creeps.wall_repairer = 0;
 
-    if (room.memory.container !== undefined) {
+    if (room.memory.container != undefined) {
         min_creeps.miner = room.memory.container.length;
     }
 
-    if (room.memory.link !== undefined) {
+    if (room.memory.link != undefined) {
         let linker = 0;
         let send_links = room.memory.link.send;
         for (let id of send_links) {
@@ -67,6 +67,14 @@ function set_min_creeps(room) {
         min_creeps.carrier = 0;
     }
 
+    if (min_creeps.carrier === 0) {
+        let roads = room.find(FIND_STRUCTURES,
+            {filter: s => s.structureType === STRUCTURE_ROAD});
+        if (roads.length === 0) {
+        }
+        min_creeps.repairer = 0;
+    }
+
     if (Object.getOwnPropertyNames(Game.constructionSites).length > 0) {
         min_creeps.builder = Math.max(1, min_creeps.builder);
     }
@@ -79,7 +87,7 @@ function set_min_creeps(room) {
 }
 
 function init_memory_wall_hits(room) {
-    if (room.memory.wall_hits === undefined) {
+    if (room.memory.wall_hits == undefined) {
         room.memory.wall_hits = {};
         room.memory.wall_hits.max = 1000000;
         room.memory.wall_hits.min = 100;

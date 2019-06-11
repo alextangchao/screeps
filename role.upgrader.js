@@ -1,4 +1,3 @@
-
 module.exports = {
     run: function (creep) {
         creep.update_working_status();
@@ -6,9 +5,8 @@ module.exports = {
             if (creep.upgradeController(creep.room.controller) === ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller);
             }
-        }
-        else {
-            creep.get_energy();
+        } else {
+            creep.get_energy(false, false);
         }
     }
 };

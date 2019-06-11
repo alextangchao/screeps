@@ -10,6 +10,9 @@ module.exports = {
             creep.harvest(source);
         } else {
             let container = Game.getObjectById(creep.memory.container_id);
+            if (container == undefined) {
+                return;
+            }
             if (creep.pos.isEqualTo(container)) {
                 creep.memory.working = true;
             } else {

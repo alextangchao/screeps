@@ -6,26 +6,26 @@ StructureSpawn.prototype.run = function () {
     for (let role of roles) {
         num_creeps[role] = _.sum(creeps, c => c.memory.role === role);
     }
-    let max_energy = Math.min(1200, this.room.energyCapacityAvailable);
+    let max_energy = Math.min(1200999, this.room.energyCapacityAvailable);
     let name = undefined;
 
     //backup solution or use harvester
     if (num_creeps.harvester < this.room.memory.min_creeps.harvester && num_creeps.carrier === 0) {
-        if (num_creeps.miner > 0 || (this.room.storage !== undefined &&
-            this.room.storage.store[RESOURCE_ENERGY] >= 150 + 150)) {
-            name = this.create_carrier(150);
+        if (num_creeps.miner > 0 || num_creeps.linker > 0
+            || (this.room.storage != undefined && this.room.storage.store[RESOURCE_ENERGY] >= 550)) {
+            name = this.create_carrier(Math.min(300, this.room.energyAvailable));
         }
         // this room only use harvester
         else {
             name = this.create_big_creep(max_energy, "harvester");
             if (name === ERR_NOT_ENOUGH_ENERGY && num_creeps.harvester === 0) {
-                name = this.create_big_creep(this.room.energy_available, "harvester");
+                //console.log(this.name+' '+this.room.energyAvailable);
+                name = this.create_big_creep(this.room.energyAvailable, "harvester");
             }
         }
     }
 
-    //console.log(name);
-    if (name === undefined) {
+    if (name == undefined) {
         for (let role of roles) {
             if (role === "harvester") {
                 continue;
@@ -35,6 +35,8 @@ StructureSpawn.prototype.run = function () {
                     name = this.create_miner(max_energy, creeps);
                 } else if (role === "linker") {
                     name = this.create_linker(max_energy, creeps);
+                } else if (role === "repairer") {
+                    name = this.create_big_creep(Math.min(200, max_energy), role);
                 } else {
                     name = this.create_big_creep(max_energy, role);
                 }
@@ -42,8 +44,7 @@ StructureSpawn.prototype.run = function () {
         }
     }
 
-    //console.log(name);
-    if (name !== undefined && !(name < 0)) {
+    if (name != undefined && !(name < 0)) {
         console.log("Spawned new creep: " + name);
         /*
         console.log("harvester: " + num_harvester);
@@ -90,8 +91,10 @@ StructureSpawn.prototype.create_miner = function (energy, creeps) {
         n -= 1;
         energy -= 100;
     }
-    //console.log("in");
-    return this.createCreep([].concat(body, MOVE), undefined,
+    if (body.length > 0) {
+        body.push(MOVE);
+    }
+    return this.createCreep(body, undefined,
         {role: "miner", working: false, source_id: source_id, container_id: container_id});
 };
 
@@ -131,7 +134,7 @@ StructureSpawn.prototype.create_carrier = function (energy) {
     for (let i = 0; i < n; i++) {
         body.push(CARRY, CARRY, MOVE);
     }
-    // create creep with the created body and the role 'lorry'
+    // create creep with the created body and the role 'carrier'
     return this.createCreep(body, undefined, {role: "carrier", working: false});
 };
 

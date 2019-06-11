@@ -46,7 +46,7 @@ module.exports.loop = function () {
 
 function clear_memory() {
     for (let name in Memory.creeps) {
-        if (Game.creeps[name] === undefined) {
+        if (Game.creeps[name] == undefined) {
             delete Memory.creeps[name];
         }
     }

@@ -8,6 +8,9 @@ module.exports = {
         creep.update_working_status();
         if (creep.memory.working === true) {
             let link = Game.getObjectById(creep.memory.link_id);
+            if (link == undefined) {
+                return;
+            }
             let status = creep.transfer(link, RESOURCE_ENERGY);
             if (status === ERR_NOT_IN_RANGE) {
                 creep.moveTo(link);
@@ -19,7 +22,10 @@ module.exports = {
             }
         } else {
             let source = Game.getObjectById(creep.memory.source_id);
-            creep.get_energy(false, source);
+            if (source == undefined) {
+                return;
+            }
+            creep.get_energy(true, false, false, source);
         }
     }
 };

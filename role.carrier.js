@@ -13,8 +13,10 @@ module.exports = {
                         && s.energy < s.energyCapacity
                 });
             if (structure == undefined) {
-                structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES,
-                    {filter: s => s.structureType === STRUCTURE_STORAGE})
+                structure = creep.room.storage;
+                creep.memory.energy_to_storage = true;
+            } else {
+                creep.memory.energy_to_storage = false;
             }
 
             if (structure != undefined) {
@@ -25,7 +27,11 @@ module.exports = {
                 role_builder.run(creep);
             }
         } else {
-            creep.get_energy(true, undefined, false);
+            if (creep.memory.energy_to_storage === true) {
+                creep.get_energy(false, true, false);
+            } else {
+                creep.get_energy(false);
+            }
         }
     }
 };

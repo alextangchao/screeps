@@ -16,7 +16,7 @@ module.exports = {
                     break;
                 }
             }
-            if (target !== undefined) {
+            if (target != undefined) {
                 if (creep.repair(target) === ERR_NOT_IN_RANGE) {
                     creep.moveTo(target);
                 }
@@ -30,7 +30,7 @@ module.exports = {
 
 
         } else {
-            creep.get_energy();
+            creep.get_energy(false, false);
         }
     }
 };

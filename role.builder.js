@@ -5,7 +5,7 @@ module.exports = {
         creep.update_working_status();
         if (creep.memory.working === true) {
             let constructure = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
-            if (constructure !== undefined) {
+            if (constructure != undefined) {
                 if (creep.build(constructure) === ERR_NOT_IN_RANGE) {
                     creep.moveTo(constructure);
                 }
@@ -13,7 +13,7 @@ module.exports = {
                 role_upgrader.run(creep);
             }
         } else {
-            creep.get_energy();
+            creep.get_energy(false, false);
         }
     }
 };
