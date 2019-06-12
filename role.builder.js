@@ -1,4 +1,4 @@
-var role_upgrader = require("role.upgrader")
+var role_upgrader = require("role.upgrader");
 
 module.exports = {
     run: function (creep) {
@@ -13,7 +13,7 @@ module.exports = {
                 role_upgrader.run(creep);
             }
         } else {
-            creep.get_energy(false, false);
+            creep.get_energy(true, false);
         }
     }
 };

@@ -6,14 +6,14 @@ StructureSpawn.prototype.run = function () {
     for (let role of roles) {
         num_creeps[role] = _.sum(creeps, c => c.memory.role === role);
     }
-    let max_energy = Math.min(1200999, this.room.energyCapacityAvailable);
+    let max_energy = Math.min(120055555, this.room.energyCapacityAvailable);
     let name = undefined;
 
     //backup solution or use harvester
     if (num_creeps.harvester < this.room.memory.min_creeps.harvester && num_creeps.carrier === 0) {
         if (num_creeps.miner > 0 || num_creeps.linker > 0
             || (this.room.storage != undefined && this.room.storage.store[RESOURCE_ENERGY] >= 550)) {
-            name = this.create_carrier(Math.min(300, this.room.energyAvailable));
+            name = this.create_carrier(Math.min(450, this.room.energyAvailable));
         }
         // this room only use harvester
         else {
@@ -36,7 +36,7 @@ StructureSpawn.prototype.run = function () {
                 } else if (role === "linker") {
                     name = this.create_linker(max_energy, creeps);
                 } else if (role === "repairer") {
-                    name = this.create_big_creep(Math.min(200, max_energy), role);
+                    name = this.create_big_creep(Math.min(400, max_energy), role);
                 } else {
                     name = this.create_big_creep(max_energy, role);
                 }
@@ -45,7 +45,7 @@ StructureSpawn.prototype.run = function () {
     }
 
     if (name != undefined && !(name < 0)) {
-        console.log("Spawned new creep: " + name);
+        console.log(this.name+" spawned new creep: " + name);
         /*
         console.log("harvester: " + num_harvester);
         console.log("upgrader: " + num_upgrader);

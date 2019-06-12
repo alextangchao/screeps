@@ -27,12 +27,10 @@ module.exports.loop = function () {
     for (let name in Game.spawns) {
         // run spawn logic
         Game.spawns[name].run();
-        /*
-        let spawn = Game.spawns[name];
-        if (spawn.room.find(FIND_MY_CREEPS).length !== spawn.room.memory.min_creeps.all_creeps) {
-            spawn.run();
+        if(name=="Spawn1"){
+            Game.spawns[name].createCreep([MOVE,ATTACK,MOVE,CLAIM,MOVE,CLAIM,MOVE,CLAIM],undefined,
+                {role:"attack",target_room:"E8S2"});
         }
-        */
     }
 
     // find all towers

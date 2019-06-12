@@ -20,7 +20,7 @@ module.exports = {
                 role_builder.run(creep);
             }
         } else {
-            creep.get_energy(false, false);
+            creep.get_energy(true, false);
         }
     }
 };

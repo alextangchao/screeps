@@ -6,7 +6,7 @@ module.exports = {
                 creep.moveTo(creep.room.controller);
             }
         } else {
-            creep.get_energy(false, false);
+            creep.get_energy(true, false);
         }
     }
 };

@@ -7,7 +7,8 @@ var roles = {
     builder: require("role.builder"),
     repairer: require("role.repairer"),
     wall_repairer: require("role.wall_repairer"),
-    claimer: require("role.claimer")
+    claimer: require("role.claimer"),
+    attack: require("role.attack")
 };
 
 Creep.prototype.run = function () {
