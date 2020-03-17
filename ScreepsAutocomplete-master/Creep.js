@@ -24,6 +24,8 @@ Creep.prototype =
     body: [],
 
     /**
+     * @deprecated Since version 4.x, replaced by `.store`.
+     *
      * An object with the creep's cargo contents.
      * Each object key is one of the RESOURCE_* constants, values are resources amounts.
      * Use _.sum(creep.carry) to get the total amount of contents.
@@ -35,6 +37,8 @@ Creep.prototype =
     carry: {},
 
     /**
+     * @deprecated Since version 4.x, replaced by `.store.getCapacity()`.
+     *
      * The total amount of resources the creep can carry.
      *
      * @see {@link http://support.screeps.com/hc/en-us/articles/203013212-Creep#carryCapacity}
@@ -141,6 +145,15 @@ Creep.prototype =
     spawning: false,
 
     /**
+     * A Store object that contains cargo of this creep.
+     *
+     * @see {@link https://docs.screeps.com/api/#Creep.store}
+     *
+     * @type {Store}
+     */
+    store: {},
+
+    /**
      * The remaining amount of game ticks after which the creep will die.
      *
      * @see {@link http://support.screeps.com/hc/en-us/articles/203013212-Creep#ticksToLive}
@@ -192,7 +205,7 @@ Creep.prototype =
      *
      * @param {ConstructionSite} target The target construction site to be built.
      *
-     * @return {number|OK|ERR_NOT_OWNER|ERR_BUSY|ERR_NOT_ENOUGH_RESOURCES|ERR_INVALID_TARGET|ERR_NOT_IN_RANGE|ERR_NO_BODYPART|ERR_RCL_NOT_ENOUGH}
+     * @return {number|OK|ERR_NOT_OWNER|ERR_BUSY|ERR_NOT_ENOUGH_RESOURCES|ERR_INVALID_TARGET|ERR_NOT_IN_RANGE|ERR_NO_BODYPART}
      */
     build: function(target) { },
 
@@ -338,13 +351,31 @@ Creep.prototype =
      *
      * @type {function}
      *
-     * @param {number} x X position of the target in the same room.
+     * @param {number|RoomPosition|RoomObject} x X position of the target in the same room.
      * @param {number} [y] Y position of the target in the same room.
      * @param {object} [opts] An object containing additional options
      * @param {number} [opts.reusePath] This option enables reusing the path found along multiple game ticks. It allows to save CPU time, but can result in a slightly slower creep reaction behavior. The path is stored into the creep's memory to the _move property. The reusePath value defines the amount of ticks which the path should be reused for. The default value is 5. Increase the amount to save more CPU, decrease to make the movement more consistent. Set to 0 if you want to disable path reusing.
      * @param {boolean} [opts.serializeMemory] If reusePath is enabled and this option is set to true, the path will be stored in memory in the short serialized form using Room.serializePath. The default value is true.
      * @param {boolean} [opts.noPathFinding] If this option is set to true, moveTo method will return ERR_NOT_FOUND if there is no memorized path to reuse. This can significantly save CPU time in some cases. The default value is false.
-     * @note opts also supports any method from the Room.findPath options.
+     * @param {object} [opts.visualizePathStyle] Draw a line along the creep’s path using RoomVisual.poly. You can provide either an empty object or custom style parameters.
+     * @param {string} [opts.visualizePathStyle.fill] Fill color in any web format
+     * @param {string} [opts.visualizePathStyle.stroke] Stroke color in any web format
+     * @param {string} [opts.visualizePathStyle.lineStyle] Either undefined (solid line), dashed, or dotted
+     * @param {number} [opts.visualizePathStyle.strokeWidth] Stroke line width
+     * @param {number} [opts.visualizePathStyle.opacity] Opacity value
+     * @param {boolean} [opts.ignoreCreeps] Treat squares with creeps as walkable. Can be useful with too many moving creeps around or in some other cases. The default value is false.
+     * @param {boolean} [opts.ignoreDestructibleStructures] Treat squares with destructible structures (constructed walls, ramparts, spawns, extensions) as walkable. Use this flag when you need to move through a territory blocked by hostile structures. If a creep with an ATTACK body part steps on such a square, it automatically attacks the structure. The default value is false.
+     * @param {boolean} [opts.ignoreRoads] Ignore road structures. Enabling this option can speed up the search. The default value is false. This is only used when the new PathFinder is enabled.
+     * @param {function(string, CostMatrix)} [opts.costCallback] You can use this callback to modify a CostMatrix for any room during the search. The callback accepts two arguments, roomName and costMatrix. Use the costMatrix instance to make changes to the positions costs. If you return a new matrix from this callback, it will be used instead of the built-in cached one. This option is only used when the new PathFinder is enabled.
+     * @param {Array} [opts.ignore] An array of the room's objects or RoomPosition objects which should be treated as walkable tiles during the search. This option cannot be used when the new PathFinder is enabled (use costCallback option instead).
+     * @param {Array} [opts.avoid] An array of the room's objects or RoomPosition objects which should be treated as obstacles during the search. This option cannot be used when the new PathFinder is enabled (use costCallback option instead).
+     * @param {number} [opts.maxOps] The maximum limit of possible pathfinding operations. You can limit CPU time used for the search based on ratio 1 op ~ 0.001 CPU. The default value is 2000.
+     * @param {number} [opts.heuristicWeight] Weight to apply to the heuristic in the A* formula F = G + weight * H. Use this option only if you understand the underlying A* algorithm mechanics! The default value is 1.2.
+     * @param {boolean} [opts.serialize] If true, the result path will be serialized using Room.serializePath. The default is false.
+     * @param {number} [opts.maxRooms] The maximum allowed rooms to search. The default (and maximum) is 16. This is only used when the new PathFinder is enabled.
+     * @param {number} [opts.range] Find a path to a position in specified linear range of target. The default is 0.
+     * @param {number} [opts.plainCost] Cost for walking on plain positions. The default is 1.
+     * @param {number} [opts.swampCost] Cost for walking on swamp positions. The default is 5.
      *
      * @alias moveTo(target, [opts])
      *
@@ -381,6 +412,21 @@ Creep.prototype =
      * @return {number|OK|ERR_NOT_OWNER|ERR_BUSY|ERR_INVALID_TARGET|ERR_FULL|ERR_NOT_IN_RANGE}
      */
     pickup: function(target) { },
+
+    /**
+     * Help another creep to follow this creep.
+     * The fatigue generated for the target's move will be added to the creep instead of the target. Requires the MOVE body part.
+     * The target has to be at adjacent square to the creep. The creep must move elsewhere, and the target must move towards the creep.
+     *
+     * @see {@link https://docs.screeps.com/api/#Creep.pull}
+     *
+     * @type {function}
+     *
+     * @param {Creep} target The target creep.
+     *
+     * @return {number|OK|ERR_NOT_OWNER|ERR_BUSY|ERR_INVALID_TARGET|ERR_TIRED|ERR_NOT_IN_RANGE|ERR_NO_BODYPART}
+     */
+    pull: function(target) { },
 
     /**
      * A ranged attack against another creep or structure.
@@ -473,6 +519,23 @@ Creep.prototype =
      * @return {number|OK|ERR_NOT_OWNER|ERR_BUSY}
      */
     say: function(message, public) { },
+    
+    /**
+     * Sign a controller with an arbitrary text visible to all players. 
+     * This text will appear in the room UI, in the world map, and can be accessed via the API. 
+     * You can sign unowned and hostile controllers. The target has to be at adjacent square to the creep. 
+     * Pass an empty string to remove the sign.
+     *
+     * @see {@link http://docs.screeps.com/api/#Creep.signController}
+     *
+     * @type {function}
+     *
+     * @param {StructureController} target The target controller object to be signed.
+     * @param {string} text The sign text. The string is cut off after 100 characters..
+     *
+     * @return {number|OK|ERR_INVALID_TARGET|ERR_BUSY|ERR_NOT_IN_RANGE}
+     */
+    signController: function(target, text) { },
 
     /**
      * Kill the creep immediately.

@@ -8,7 +8,8 @@ var roles = {
     repairer: require("role.repairer"),
     wall_repairer: require("role.wall_repairer"),
     claimer: require("role.claimer"),
-    attack: require("role.attack")
+    attack: require("role.attack"),
+    long_distance_worker:require("role.long_distance_worker")
 };
 
 Creep.prototype.run = function () {
@@ -18,9 +19,9 @@ Creep.prototype.run = function () {
 };
 
 Creep.prototype.update_working_status = function () {
-    if (this.memory.working === true && this.carry.energy === 0) {
+    if (this.memory.working === true && this.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
         this.memory.working = false;
-    } else if (this.memory.working === false && this.carry.energy === this.carryCapacity) {
+    } else if (this.memory.working === false && this.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
         this.memory.working = true;
     }
 };
@@ -33,7 +34,8 @@ Creep.prototype.get_energy = function (use_source = true, use_container_or_link 
         if (this.withdraw(source, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             this.moveTo(source);
         }
-    } else if (use_storage && this.room.storage != undefined) {
+        return "container";
+    } else if (use_storage && this.room.storage != undefined && this.room.storage.store[RESOURCE_ENERGY] > 300) {
         let storage = this.room.storage;
         if (this.withdraw(storage, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             this.moveTo(storage);
@@ -46,5 +48,13 @@ Creep.prototype.get_energy = function (use_source = true, use_container_or_link 
         if (this.harvest(source) === ERR_NOT_IN_RANGE) {
             this.moveTo(source);
         }
+        return "source";
+    } else{
+        return "None";
+        let drop = this.pos.findInRange(FIND_DROPPED_RESOURCES, 1);
+        if (drop.length > 0) {
+            this.pickup(drop[0]);
+        }
     }
+    
 };

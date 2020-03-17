@@ -32,7 +32,7 @@ Room = {
      *
      * return {Array} A path array.
      */
-    deserializePath: function(path) { }
+    deserializePath: function(path) { },
 };
 
 Room.prototype =
@@ -109,6 +109,14 @@ Room.prototype =
      * @type {undefined|StructureTerminal}
      */
     terminal: null,
+
+    /**
+     * A RoomVisual object for this room. You can use this object to draw simple shapes (lines, circles, text labels) in the room.
+     * @see {@link http://docs.screeps.com/api/#Room.visual}
+     *
+     * @type {RoomVisual}
+     */
+    visual: null,
 
     /**
      * Create new ConstructionSite at the specified location.
@@ -196,6 +204,9 @@ Room.prototype =
      * @param {number} [opts.heuristicWeight] Weight to apply to the heuristic in the A* formula F = G + weight * H. Use this option only if you understand the underlying A* algorithm mechanics! The default value is 1.2.
      * @param {boolean} [opts.serialize] If true, the result path will be serialized using Room.serializePath. The default is false.
      * @param {number} [opts.maxRooms] The maximum allowed rooms to search. The default (and maximum) is 16. This is only used when the new PathFinder is enabled.
+     * @param {number} [opts.range] Find a path to a position in specified linear range of target. The default is 0.
+     * @param {number} [opts.plainCost] Cost for walking on plain positions. The default is 1.
+     * @param {number} [opts.swampCost] Cost for walking on swamp positions. The default is 5.
      *
      * @return {Array} An array with path steps in the following format:
                          [
@@ -207,6 +218,24 @@ Room.prototype =
 
      */
     findPath: function(fromPos, toPos, opts) { },
+
+    /**
+     * Returns an array of events happened on the previous tick in this room.
+     *
+     * @see {@link https://docs.screeps.com/api/#Room.getEventLog}
+     *
+     * @type {function}
+     *
+     * @param {raw} [raw] If this parameter is false or undefined, the method returns an object parsed using JSON.parse which incurs some CPU cost on the first access (the return value is cached on subsequent calls). If raw is truthy, then raw JSON in string format is returned.
+     *
+     * @return An array of events. Each event represents some game action in the following format:
+                        {
+                            event: EVENT_ATTACK,
+                            objectId: '54bff72ab32a10f73a57d017',
+                            data: { ... }
+                        }
+     */
+    getEventLog: function(raw) { },
 
     /**
      * Creates a RoomPosition object at the specified location.
@@ -221,6 +250,17 @@ Room.prototype =
      * @return {null|RoomPosition}
      */
     getPositionAt: function(x, y) { },
+
+    /**
+     * Get a Room.Terrain object which provides fast access to static terrain data. This method works for any room in the world even if you have no access to it.
+     *
+     * @see {@link https://docs.screeps.com/api/#Room.getTerrain}
+     *
+     * @type {function}
+     *
+     * @return {Room.Terrain} Returns new Room.Terrain object.
+     */
+    getTerrain: function() {},
 
     /**
      * Get the list of objects at the specified room position.
@@ -376,5 +416,54 @@ Room.prototype =
                             }
                         }
      */
-    lookForAtArea: function(type, top, left, bottom, right, asArray) { }
+    lookForAtArea: function(type, top, left, bottom, right, asArray) { },
+};
+
+/**
+ * An object which provides fast access to room terrain data. These objects can be constructed for any room in the world even if you have no access to it.
+ *
+ * Technically every Room.Terrain object is a very lightweight adapter to underlying static terrain buffers with corresponding minimal accessors.
+ *
+ * @param {string} roomName The room name.
+ *
+ * @class
+ * @constructor
+ *
+ * @see {@link https://docs.screeps.com/api/#Room-Terrain}
+ */
+Room.Terrain = function(roomName) {},
+
+Room.Terrain.prototype = {
+    /**
+     * Get terrain type at the specified room position by (x,y) coordinates. Unlike the Game.map.getTerrainAt(...) method, this one doesn't perform any string operations and returns integer terrain type values (see below).
+     *
+     * @see {@link https://docs.screeps.com/api/#Room.Terrain.get}
+     *
+     * @type {function}
+     *
+     * @param {number} x X position in the room.
+     * @param {number} y Y position in the room.
+     *
+     * @return {0|TERRAIN_MASK_WALL|TERRAIN_MASK_SWAMP} An integer value. 0 if Plain.
+     */
+    get: function(x, y) {},
+
+    /**
+     * Get copy of underlying static terrain buffer. Current underlying representation is Uint8Array.
+     *
+     * @note WARNING: this method relies on underlying representation of terrain data. This is the fastest way to obtain terrain data of the whole room (2500 tiles), but users should keep in mind that it can be marked as deprecated anytime in the future, or return value type can be changed due to underlying data representation changing.
+     *
+     * @see {@link https://docs.screeps.com/api/#Room.Terrain.getRawBuffer}
+     *
+     * @type {function}
+     *
+     * @param {Array} [destinationArray] A typed array view in which terrain will be copied to.
+     *
+     * @return {Array|ERR_INVALID_ARGS} Copy of underlying room terrain representations as a new Uint8Array typed array of size 2500.
+
+                                  Each element is an integer number, terrain type can be obtained by applying bitwise AND (&) operator with appropriate TERRAIN_MASK_* constant. Room tiles are stored row by row.
+
+                                  If destinationArray is specified, function returns reference to this filled destinationArray if coping succeeded, or error code otherwise:
+     */
+    getRawBuffer: function(destinationArray) {},
 };

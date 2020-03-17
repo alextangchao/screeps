@@ -1,5 +1,5 @@
-var role_upgrader = require("role.upgrader");
-var role_builder = require("role.builder");
+let role_upgrader = require("role.upgrader");
+let role_builder = require("role.builder");
 
 module.exports = {
     run: function (creep) {
@@ -7,11 +7,18 @@ module.exports = {
         if (creep.memory.working === true) {
             let structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES,
                 {
-                    filter: (s) => (s.structureType === STRUCTURE_SPAWN
-                        || s.structureType === STRUCTURE_EXTENSION
-                        || s.structureType === STRUCTURE_TOWER)
-                        && s.energy < s.energyCapacity
+                    filter: (s) => (s.structureType === STRUCTURE_TOWER
+                        && s.store.getFreeCapacity(RESOURCE_ENERGY) > 500)
                 });
+            if (structure == undefined) {
+                structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES,
+                    {
+                        filter: (s) => ((s.structureType === STRUCTURE_SPAWN
+                            || s.structureType === STRUCTURE_EXTENSION
+                            || s.structureType === STRUCTURE_TOWER)
+                            && s.energy < s.energyCapacity)
+                    });
+            }
             if (structure == undefined) {
                 structure = creep.room.storage;
                 creep.memory.energy_to_storage = true;
@@ -24,7 +31,7 @@ module.exports = {
                     creep.moveTo(structure);
                 }
             } else {
-                role_builder.run(creep);
+                // role_builder.run(creep);
             }
         } else {
             if (creep.memory.energy_to_storage === true) {

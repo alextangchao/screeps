@@ -1,4 +1,5 @@
-var role_upgrader = require("role.upgrader");
+let role_upgrader = require("role.upgrader");
+let role_wall_repairer = require("role.wall_repairer");
 
 module.exports = {
     run: function (creep) {
@@ -13,7 +14,14 @@ module.exports = {
                 role_upgrader.run(creep);
             }
         } else {
-            creep.get_energy(true, false);
+            let drop_energy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 5)[0];
+            if (drop_energy != undefined) {
+                if (creep.pickup(drop_energy) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(drop_energy);
+                }
+            } else {
+                creep.get_energy(false, false);
+            }
         }
     }
 };

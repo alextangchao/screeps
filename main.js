@@ -2,13 +2,13 @@ require("prototype.spawn");
 require("prototype.creep");
 require("prototype.room");
 require("prototype.tower");
-var init_set = require("init_set");
+const init_set = require("init_set");
 
-var home = "E11S2";
+const home = "E11S2";
 
 module.exports.loop = function () {
     clear_memory();
-
+    //return;
     for (let name in Game.rooms) {
         let room = Game.rooms[name];
         if (room.memory.need_init !== false) {
@@ -27,10 +27,15 @@ module.exports.loop = function () {
     for (let name in Game.spawns) {
         // run spawn logic
         Game.spawns[name].run();
-        if(name=="Spawn1"){
-            Game.spawns[name].createCreep([MOVE,ATTACK,MOVE,CLAIM,MOVE,CLAIM,MOVE,CLAIM],undefined,
-                {role:"attack",target_room:"E8S2"});
+        /*
+        if (name === "Spawn1") {
+            Game.spawns.Spawn1.createCreep(
+                [WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE,
+                 WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE],
+                undefined,
+                {role: "long_distance_worker", working: false, target_room: "E8S3"});
         }
+        */
     }
 
     // find all towers
@@ -43,6 +48,7 @@ module.exports.loop = function () {
 };
 
 function clear_memory() {
+    //console.log("memory clear");
     for (let name in Memory.creeps) {
         if (Game.creeps[name] == undefined) {
             delete Memory.creeps[name];

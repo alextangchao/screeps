@@ -4,9 +4,9 @@ StructureSpawn.prototype.run = function () {
     let creeps = this.room.find(FIND_MY_CREEPS);
     let num_creeps = {};
     for (let role of roles) {
-        num_creeps[role] = _.sum(creeps, c => c.memory.role === role);
+        num_creeps[role] = _.sum(creeps, c => c.memory.role == role);
     }
-    let max_energy = Math.min(120055555, this.room.energyCapacityAvailable);
+    let max_energy = Math.min(1500, this.room.energyCapacityAvailable);
     let name = undefined;
 
     //backup solution or use harvester
@@ -18,12 +18,13 @@ StructureSpawn.prototype.run = function () {
         // this room only use harvester
         else {
             name = this.create_big_creep(max_energy, "harvester");
-            if (name === ERR_NOT_ENOUGH_ENERGY && num_creeps.harvester === 0) {
+            if (name == ERR_NOT_ENOUGH_ENERGY && num_creeps.harvester === 0) {
                 //console.log(this.name+' '+this.room.energyAvailable);
                 name = this.create_big_creep(this.room.energyAvailable, "harvester");
             }
         }
     }
+    
 
     if (name == undefined) {
         for (let role of roles) {
@@ -43,6 +44,8 @@ StructureSpawn.prototype.run = function () {
             }
         }
     }
+    
+    //console.log(this.name+' '+name);
 
     if (name != undefined && !(name < 0)) {
         console.log(this.name+" spawned new creep: " + name);
@@ -60,6 +63,7 @@ StructureSpawn.prototype.run = function () {
 // create a new function to spawn big creep
 StructureSpawn.prototype.create_big_creep = function (energy, role_name) {
     let n = Math.floor(energy / 200);
+    n=Math.min(16,n);
     let body = [];
     for (let i = 0; i < n; i++) {
         body.push(WORK, CARRY, MOVE);
@@ -114,14 +118,14 @@ StructureSpawn.prototype.create_linker = function (energy, creeps) {
         }
     }
 
-    let n = Math.floor((energy - 100) / 100);
+    let n = Math.floor((energy - 150) / 100);
     n = Math.min(n, 5);
     let body = [];
     for (let i = 0; i < n; i++) {
         body.push(WORK);
     }
 
-    return this.createCreep([].concat(MOVE, body, CARRY), undefined,
+    return this.createCreep([].concat(MOVE, MOVE, body, CARRY), undefined,
         {role: "linker", working: false, source_id: source_id, link_id: link_id});
 };
 
