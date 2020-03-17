@@ -90,7 +90,7 @@ StructureSpawn.prototype.create_miner = function (energy, creeps) {
 
     let body = [], n = 5;
     energy -= 50;
-    while (n > 0 && energy >= 100) {
+    while (n > 0 && energy > 100) {
         body.push(WORK);
         n -= 1;
         energy -= 100;

@@ -27,7 +27,7 @@ module.exports.loop = function () {
     for (let name in Game.spawns) {
         // run spawn logic
         Game.spawns[name].run();
-/*
+        /*
         if (name === "Spawn1") {
             Game.spawns.Spawn1.createCreep(
                 [WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE,
@@ -35,7 +35,13 @@ module.exports.loop = function () {
                 undefined,
                 {role: "long_distance_worker", working: false, target_room: "E8S3"});
         }
-*/
+        */
+        /*
+        let spawn = Game.spawns[name];
+        if (spawn.room.find(FIND_MY_CREEPS).length !== spawn.room.memory.min_creeps.all_creeps) {
+            spawn.run();
+        }
+        */
     }
 
     // find all towers
