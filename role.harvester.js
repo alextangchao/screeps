@@ -7,12 +7,29 @@ module.exports = {
         if (creep.memory.working === true) {
             let structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES,
                 {
-                    filter: (s) => (s.structureType === STRUCTURE_SPAWN
-                        || s.structureType === STRUCTURE_EXTENSION
-                        || s.structureType === STRUCTURE_TOWER)
-                        && s.energy < s.energyCapacity
+                    filter: (s) => ((s.structureType === STRUCTURE_SPAWN
+                        //|| s.structureType === STRUCTURE_TOWER
+                        || s.structureType === STRUCTURE_EXTENSION)
+                        && s.energy < s.energyCapacity)
+
                 });
-            if (structure !== undefined) {
+            if (structure == undefined) {
+                structure = creep.pos.findClosestByPath(FIND_STRUCTURES,
+                    {filter: (s) => s.structureType === STRUCTURE_ROAD && s.hits < s.hitsMax});
+                // console.log(structure.pos)
+                if (structure != undefined) {
+                    if (creep.repair(structure) === ERR_NOT_IN_RANGE) {
+                        creep.moveTo(structure);
+                    }
+                    return;
+                }
+            }
+            if (structure == undefined) {
+                structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES,
+                    {filter: s => s.structureType === STRUCTURE_STORAGE});
+            }
+
+            if (structure != undefined) {
                 if (creep.transfer(structure, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                     creep.moveTo(structure);
                 }
@@ -20,7 +37,14 @@ module.exports = {
                 role_builder.run(creep);
             }
         } else {
-            creep.get_energy();
+            let drop_energy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 5)[0];
+            if (drop_energy != undefined) {
+                if (creep.pickup(drop_energy) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(drop_energy);
+                }
+            } else {
+                creep.get_energy();
+            }
         }
     }
 };

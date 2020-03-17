@@ -19,6 +19,8 @@ StructureLab.prototype =
     cooldown: 0,
 
     /**
+     * @deprecated Since version 4.x, replaced by `.store[RESOURCE_ENERGY]`.
+     *
      * The amount of energy containing in the lab. Energy is used for boosting creeps.
      *
      * @see {@link http://support.screeps.com/hc/en-us/articles/208436195-StructureLab#energy}
@@ -28,6 +30,8 @@ StructureLab.prototype =
     energy: 0,
 
     /**
+     * @deprecated Since version 4.x, replaced by `.store.getCapacity(RESOURCE_ENERGY)`.
+     *
      * The total amount of energy the lab can contain.
      *
      * @see {@link http://support.screeps.com/hc/en-us/articles/208436195-StructureLab#energyCapacity}
@@ -37,6 +41,8 @@ StructureLab.prototype =
     energyCapacity: 0,
 
     /**
+     * @deprecated Since version 4.x, replaced by `lab.store[lab.mineralType]`.
+     *
      * The amount of mineral resources containing in the lab.
      *
      * @see {@link http://support.screeps.com/hc/en-us/articles/208436195-StructureLab#mineralAmount}
@@ -56,6 +62,8 @@ StructureLab.prototype =
     mineralType: "",
 
     /**
+     * @deprecated Since version 4.x, replaced by `lab.store.getCapacity(lab.mineralType || yourMineral)`.
+     *
      * The total amount of minerals the lab can contain.
      *
      * @see {@link http://support.screeps.com/hc/en-us/articles/208436195-StructureLab#mineralCapacity}
@@ -63,6 +71,15 @@ StructureLab.prototype =
      * @type {number}
      */
     mineralCapacity: 0,
+
+    /**
+     * A Store object that contains cargo of this structure.
+     *
+     * @see {@link https://docs.screeps.com/api/#StructureLab.store}
+     *
+     * @type {Store}
+     */
+    store: {},
 
     /**
      * Boosts creep body part using the containing mineral compound.
@@ -80,6 +97,21 @@ StructureLab.prototype =
     boostCreep: function(creep, bodyPartsCount) { },
 
     /**
+     * Immediately remove boosts from the creep and drop 50% of the mineral compounds used to boost it onto the ground regardless of the creep's remaining time to live.
+     * The creep has to be at adjacent square to the lab. Unboosting requires cooldown time equal to the total sum of the reactions needed to produce all the compounds applied to the creep.
+     *
+     * @see {@link https://docs.screeps.com/api/#StructureLab.unboostCreep}
+     *
+     * @type {function}
+     *
+     * @param {Creep} creep The target creep.
+     *
+     * @return {number|OK|ERR_NOT_OWNER|ERR_NOT_FOUND|ERR_INVALID_TARGET|ERR_NOT_IN_RANGE|ERR_TIRED}
+     */
+    unboostCreep: function(creep) { },
+
+
+    /**
      * Produce mineral compounds using reagents from two another labs.
      * The same input labs can be used by many output labs.
      *
@@ -94,22 +126,4 @@ StructureLab.prototype =
      */
     runReaction: function(lab1, lab2) { },
 
-    /**
-     * @deprecated Since version 2016-07-11, replaced by `Creep.withdraw()`.
-     *
-     * Transfer resource from this structure to a creep.
-     * The target has to be at adjacent square.
-     * You can transfer resources to your creeps from hostile structures as well.
-     *
-     * @see {@link http://support.screeps.com/hc/en-us/articles/208436195-StructureLab#transfer}
-     *
-     * @type {function}
-     *
-     * @param {Creep} target The target object.
-     * @param {string} resourceType One of the RESOURCE_* constants.
-     * @param {number|undefined|null} [amount] The amount of resources to be transferred. If omitted, all the available amount is used.
-     *
-     * @return {number|OK|ERR_NOT_OWNER|ERR_NOT_ENOUGH_RESOURCES|ERR_INVALID_TARGET|ERR_FULL|ERR_NOT_IN_RANGE|ERR_INVALID_ARGS}
-     */
-    transfer: function(target, resourceType, amount) { }
 };

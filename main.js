@@ -2,20 +2,19 @@ require("prototype.spawn");
 require("prototype.creep");
 require("prototype.room");
 require("prototype.tower");
-var init_set = require("init_set");
+const init_set = require("init_set");
 
-var home = "E11S2";
-
-for (let name in Game.rooms) {
-    init_set.run(Game.rooms[name]);
-}
+const home = "E11S2";
 
 module.exports.loop = function () {
     clear_memory();
-
+    //return;
     for (let name in Game.rooms) {
-        // run creep logic
-        Game.rooms[name].cal_energy_available();
+        let room = Game.rooms[name];
+        if (room.memory.need_init !== false) {
+            init_set.run(room);
+        }
+        room.cal_energy_available();
     }
 
     // for each creeps
@@ -28,10 +27,19 @@ module.exports.loop = function () {
     for (let name in Game.spawns) {
         // run spawn logic
         Game.spawns[name].run();
+/*
+        if (name === "Spawn1") {
+            Game.spawns.Spawn1.createCreep(
+                [WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE,
+                 WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE],
+                undefined,
+                {role: "long_distance_worker", working: false, target_room: "E8S3"});
+        }
+*/
     }
 
     // find all towers
-    var towers = _.filter(Game.structures, s => s.structureType === STRUCTURE_TOWER);
+    let towers = _.filter(Game.structures, s => s.structureType === STRUCTURE_TOWER);
     // for each tower
     for (let tower of towers) {
         // run tower logic
@@ -40,8 +48,9 @@ module.exports.loop = function () {
 };
 
 function clear_memory() {
+    //console.log("memory clear");
     for (let name in Memory.creeps) {
-        if (Game.creeps[name] === undefined) {
+        if (Game.creeps[name] == undefined) {
             delete Memory.creeps[name];
         }
     }
