@@ -34,6 +34,14 @@ module.exports = {
                 // role_builder.run(creep);
             }
         } else {
+            let ruin = creep.pos.findClosestByPath(FIND_RUINS,
+                {filter: s =>s.store.getUsedCapacity(RESOURCE_ENERGY)});
+            if(ruin !== null){
+                if (creep.withdraw(ruin, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                    creep.moveTo(ruin);
+                }
+                return;
+            }
             if (creep.memory.energy_to_storage === true) {
                 creep.get_energy(false, true, false);
             } else {

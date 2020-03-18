@@ -31,9 +31,10 @@ module.exports.loop = function () {
         if (name === "Spawn1") {
             Game.spawns.Spawn1.createCreep(
                 [WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE,
+                 WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE,
                  WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE],
                 undefined,
-                {role: "long_distance_worker", working: false, target_room: "E8S3"});
+                {role: "long_distance_worker", working: false, target_room: "E12S0", change: "E13S2"});
         }
         */
     }

@@ -35,10 +35,12 @@ module.exports = {
                     creep.moveTo(creep.pos.findClosestByRange(exit));
                     return;
                 }
-                if(creep.ticksToLive == 120){
+                /*
+                if (creep.ticksToLive == 120) {
                     console.log("will dead");
                     creep.memory.role = "upgrader";
                 }
+                */
                 /*
                 if (creep.memory.alive != undefined || creep.ticksToLive == 150) {
                     let num = Game.spawns.Spawn1.createCreep(
@@ -66,6 +68,17 @@ module.exports = {
             }
         } else {
             // if in target room
+
+            let ruin = creep.pos.findClosestByPath(FIND_RUINS,
+                {filter: s =>s.store.getUsedCapacity(RESOURCE_ENERGY)});
+            if(ruin !== null){
+                if (creep.withdraw(ruin, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                    creep.moveTo(ruin);
+                }
+                return;
+            }
+
+
             let drop_energy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 5)[0];
             if (drop_energy != undefined) {
                 if (creep.pickup(drop_energy) === ERR_NOT_IN_RANGE) {

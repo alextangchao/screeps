@@ -24,7 +24,7 @@ StructureSpawn.prototype.run = function () {
             }
         }
     }
-    
+
 
     if (name == undefined) {
         for (let role of roles) {
@@ -44,11 +44,11 @@ StructureSpawn.prototype.run = function () {
             }
         }
     }
-    
+
     //console.log(this.name+' '+name);
 
     if (name != undefined && !(name < 0)) {
-        console.log(this.name+" spawned new creep: " + name);
+        console.log(this.name + " spawned new creep: " + name);
         /*
         console.log("harvester: " + num_harvester);
         console.log("upgrader: " + num_upgrader);
@@ -63,7 +63,7 @@ StructureSpawn.prototype.run = function () {
 // create a new function to spawn big creep
 StructureSpawn.prototype.create_big_creep = function (energy, role_name) {
     let n = Math.floor(energy / 200);
-    n=Math.min(16,n);
+    n = Math.min(16, n);
     let body = [];
     for (let i = 0; i < n; i++) {
         body.push(WORK, CARRY, MOVE);
