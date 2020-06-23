@@ -5,10 +5,14 @@ require("prototype.tower");
 const init_set = require("init_set");
 
 const home = "E11S2";
+console.log("all program init");
+Game.notify("all program init");
 
 module.exports.loop = function () {
-    clear_memory();
     //return;
+    clear_memory();
+    Game.cpu.generatePixel();
+    
     for (let name in Game.rooms) {
         let room = Game.rooms[name];
         if (room.memory.need_init !== false) {

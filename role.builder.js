@@ -11,7 +11,7 @@ module.exports = {
                     creep.moveTo(constructure);
                 }
             } else {
-                role_upgrader.run(creep);
+                role_wall_repairer.run(creep);
             }
         } else {
 
