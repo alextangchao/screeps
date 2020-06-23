@@ -5,10 +5,14 @@ require("prototype.tower");
 const init_set = require("init_set");
 
 const home = "E11S2";
+console.log("all program init");
+Game.notify("all program init");
 
 module.exports.loop = function () {
-    clear_memory();
     //return;
+    clear_memory();
+    Game.cpu.generatePixel();
+    
     for (let name in Game.rooms) {
         let room = Game.rooms[name];
         if (room.memory.need_init !== false) {
@@ -31,9 +35,10 @@ module.exports.loop = function () {
         if (name === "Spawn1") {
             Game.spawns.Spawn1.createCreep(
                 [WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE,
+                 WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE,
                  WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE, WORK, CARRY, MOVE, MOVE],
                 undefined,
-                {role: "long_distance_worker", working: false, target_room: "E8S3"});
+                {role: "long_distance_worker", working: false, target_room: "E12S0", change: "E13S2"});
         }
         */
     }
