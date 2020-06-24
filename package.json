@@ -1,0 +1,26 @@
+{
+  "name": "screeps-default",
+  "version": "0.1.0",
+  "description": "The default code for screeps of alextangchao",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alextangchao/screeps.git"
+  },
+  "keywords": [
+    "screeps"
+  ],
+  "author": "alextangchao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alextangchao/screeps/issues"
+  },
+  "homepage": "https://github.com/alextangchao/screeps#readme",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-nodeunit": "~0.4.1",
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-screeps": "^1.4.0"
+  }
+}

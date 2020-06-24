@@ -8,6 +8,8 @@ const home = "E11S2";
 console.log("all program init");
 Game.notify("all program init");
 
+console.log("commit successful");
+
 module.exports.loop = function () {
     //return;
     clear_memory();
