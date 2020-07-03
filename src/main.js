@@ -2,6 +2,8 @@ require("prototype.spawn");
 require("prototype.creep");
 require("prototype.room");
 require("prototype.tower");
+
+const stat = require("stat");
 const init_set = require("init_set");
 
 const home = "E11S2";
@@ -49,6 +51,8 @@ module.exports.loop = function () {
         // run tower logic
         tower.run();
     }
+
+    stat.cal_stat();
 };
 
 function clear_memory() {
