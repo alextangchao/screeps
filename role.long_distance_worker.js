@@ -53,7 +53,7 @@ module.exports = {
                     }
                 }
                 */
-                if (creep.room.controller.my && creep.room.controller.level === 8 && creep.room.controller.ticksToDowngrade < 199000) {
+                if (creep.room.controller.my && creep.room.controller.level === 8 && creep.room.controller.ticksToDowngrade < 100000) {
                     role_upgrader.run(creep);
                     return;
                 }
