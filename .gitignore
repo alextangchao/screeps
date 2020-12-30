@@ -5,5 +5,7 @@
 # IntelliJ project files
 .idea
 *.iml
+node_modules/
+Gruntfile.js
 out
 gen
