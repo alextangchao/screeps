@@ -1,4 +1,4 @@
-var roles = {
+let roles = {
     harvester: require("role.harvester"),
     miner: require("role.miner"),
     linker: require("role.linker"),
@@ -9,12 +9,28 @@ var roles = {
     wall_repairer: require("role.wall_repairer"),
     claimer: require("role.claimer"),
     attack: require("role.attack"),
-    long_distance_worker:require("role.long_distance_worker")
+    long_distance_worker: require("role.long_distance_worker")
 };
 
 Creep.prototype.run = function () {
-    if (this.memory.role != undefined) {
-        roles[this.memory.role].run(this);
+    // if (this.memory.role != undefined) {
+    //     roles[this.memory.role].run(this);
+    // }
+
+    let task = global.task.creeps[this.name];
+    if (task !== undefined) {
+        this.say("Working");
+        // if (task.run === undefined || typeof(task.run) === "object") {
+        //     console.log("add function back to task");
+        //     task.run = tasks[task.name].run;
+        //     //console.log(JSON.stringify(tasks[task.name].run));
+        // }
+        let finish = task.run(this, ...task.argument);
+        //console.log("finish", finish);
+        if (finish) {
+            global.task.creeps[this.name] = undefined;
+            //TODO: move creep out of the road
+        }
     }
 };
 
@@ -49,12 +65,12 @@ Creep.prototype.get_energy = function (use_source = true, use_container_or_link 
             this.moveTo(source);
         }
         return "source";
-    } else{
+    } else {
         return "None";
         let drop = this.pos.findInRange(FIND_DROPPED_RESOURCES, 1);
         if (drop.length > 0) {
             this.pickup(drop[0]);
         }
     }
-    
+
 };
