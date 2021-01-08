@@ -4,7 +4,7 @@ require("prototype.room");
 require("prototype.tower");
 
 let goto = require("task.goto");
-let task_resume = require("task.resume");
+let resume_task = require("task.resume");
 
 const stat = require("stat");
 const init_set = require("init_set");
@@ -12,16 +12,16 @@ const init_set = require("init_set");
 const home = "E11S2";
 console.log("all program init");
 
-task_resume();
+resume_task();
 
 //temp---------
 global.poss = Game.rooms.sim.controller.pos;
-global.add_test_task = function () {
+global.add_task_goto = function (pos) {
     global.task.rooms.sim.push({
         name: "goto",
         room: "sim",
         run: goto.run,
-        argument: [Game.rooms.sim.controller.pos, true]
+        argument: [pos]
     })
 };
 //-------------
@@ -41,12 +41,6 @@ module.exports.loop = function () {
 
     // for each creeps
     for (let name in Game.creeps) {
-        //temp---------
-        let creep = Game.creeps[name];
-        if (!creep.pos.isNearTo(creep.room.controller)) {
-            global.task.creeps[name] = global.task.rooms.sim[0];
-        }
-        //-------------
         // run creep logic
         Game.creeps[name].run();
     }
@@ -75,15 +69,16 @@ module.exports.loop = function () {
         tower.run();
     }
 
+
     //save tasks into memory
-    for (let room_name in global.task.rooms) {
+    for (let room_name in Game.rooms) {
         Game.rooms[room_name].memory.task = global.task.rooms[room_name];
     }
-    for (let creep_name in global.task.creeps) {
+    for (let creep_name in Game.creeps) {
         Game.creeps[creep_name].memory.task = global.task.creeps[creep_name];
     }
 
-    stat.cal_stat();
+    //stat.cal_stat();
 };
 
 function clear_memory() {

@@ -18,20 +18,30 @@ Creep.prototype.run = function () {
     // }
 
     let task = global.task.creeps[this.name];
+    // console.log(JSON.stringify(task), JSON.stringify(global.task.creeps[this.name]));
+    if (task === undefined && global.task.rooms[this.room.name].length !== 0) {
+        let num = global.task.rooms[this.room.name].length;
+        task = global.task.creeps[this.name] = global.task.rooms[this.room.name].shift();
+        // console.log("remove task from room");
+        // console.log(this.room.name, num, "->", global.task.rooms[this.room.name].length);
+        //task = global.task.creeps[this.name];
+    }
+    //console.log(JSON.stringify(task),JSON.stringify(global.task.creeps[this.name]));
     if (task !== undefined) {
-        this.say("Working");
-        // if (task.run === undefined || typeof(task.run) === "object") {
-        //     console.log("add function back to task");
-        //     task.run = tasks[task.name].run;
-        //     //console.log(JSON.stringify(tasks[task.name].run));
-        // }
+        this.say(task.name);
+        // console.log(this.name, "has task");
+        // console.log(JSON.stringify(task));
         let finish = task.run(this, ...task.argument);
-        //console.log("finish", finish);
+        // console.log("finish", finish);
         if (finish) {
+            // remove finished task
             global.task.creeps[this.name] = undefined;
+            // console.log("remove task from creep");
+            // console.log(JSON.stringify(global.task.creeps[this.name]));
             //TODO: move creep out of the road
         }
     }
+    // console.log(JSON.stringify(global.task.creeps[this.name]));
 };
 
 Creep.prototype.update_working_status = function () {
