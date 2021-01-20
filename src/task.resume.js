@@ -30,7 +30,7 @@ function resume_lost_info(task) {
     //console.log(JSON.stringify(require("task.goto")));
     // console.log(Object.keys(tasks.goto),typeof(tasks.goto.run));
     //add missing function back to task
-    task.run = tasks[task.name].run;
+    task.func = tasks[task.name];
     resume_pos(task.argument);
 }
 

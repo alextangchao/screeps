@@ -19,6 +19,10 @@ Creep.prototype.run = function () {
 
     let task = global.task.creeps[this.name];
     // console.log(JSON.stringify(task), JSON.stringify(global.task.creeps[this.name]));
+    if (task !== undefined && task.func.finish(this, ...task.argument)) {
+        task = global.task.creeps[this.name] = undefined;
+        //TODO: move creep out of the road
+    }
     if (task === undefined && global.task.rooms[this.room.name].length !== 0) {
         let num = global.task.rooms[this.room.name].length;
         task = global.task.creeps[this.name] = global.task.rooms[this.room.name].shift();
@@ -31,15 +35,7 @@ Creep.prototype.run = function () {
         this.say(task.name);
         // console.log(this.name, "has task");
         // console.log(JSON.stringify(task));
-        let finish = task.run(this, ...task.argument);
-        // console.log("finish", finish);
-        if (finish) {
-            // remove finished task
-            global.task.creeps[this.name] = undefined;
-            // console.log("remove task from creep");
-            // console.log(JSON.stringify(global.task.creeps[this.name]));
-            //TODO: move creep out of the road
-        }
+        task.func.run(this, ...task.argument);
     }
     // console.log(JSON.stringify(global.task.creeps[this.name]));
 };

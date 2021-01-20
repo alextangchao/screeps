@@ -3,8 +3,10 @@ require("prototype.creep");
 require("prototype.room");
 require("prototype.tower");
 
-let goto = require("task.goto");
+global.pq = require("pq");
 let resume_task = require("task.resume");
+
+let goto = require("task.goto");
 
 const stat = require("stat");
 const init_set = require("init_set");
@@ -15,12 +17,19 @@ console.log("all program init");
 resume_task();
 
 //temp---------
+global.qq = new pq();
+qq.push({name:"empty"});
+qq.push({time: 50});
+qq.push({time: 555});
+qq.push({time:5});
+// qq.push({time:350});
+
 global.poss = Game.rooms.sim.controller.pos;
 global.add_task_goto = function (pos) {
     global.task.rooms.sim.push({
         name: "goto",
         room: "sim",
-        run: goto.run,
+        func: goto.run,
         argument: [pos]
     })
 };
