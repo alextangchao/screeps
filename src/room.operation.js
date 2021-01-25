@@ -1,0 +1,3 @@
+Room.prototype.operate = function () {
+
+}

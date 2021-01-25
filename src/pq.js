@@ -11,10 +11,6 @@ module.exports =
             return this
         }
 
-        recover(events) {
-            this.events = events;
-        }
-
         empty() {
             return this.size() === 0
         }
