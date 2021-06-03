@@ -2,6 +2,7 @@ require("prototype.spawn");
 require("prototype.creep");
 require("prototype.room");
 require("prototype.tower");
+require("room.operation");
 
 global.pq = require("pq");
 let resume_task = require("task.resume");
@@ -16,14 +17,23 @@ console.log("all program init");
 
 resume_task();
 
-//temp---------
-global.qq = new pq();
-qq.push({name:"empty"});
-qq.push({time: 50});
-qq.push({time: 555});
-qq.push({time:5});
+// test pq
+// global.qq = new pq();
+// qq.push({name:"empty"});
+// qq.push({time: 250});
+// qq.push({time: 555});
+// qq.push({time:5});
 // qq.push({time:350});
+// qq.push({time:50});
+// console.log(JSON.stringify(qq))
+// console.log(JSON.stringify(qq.pop()))
+// console.log(JSON.stringify(qq))
+// console.log(JSON.stringify(qq.pop()))
+// console.log(JSON.stringify(qq))
 
+// end test pq
+
+//temp---------
 global.poss = Game.rooms.sim.controller.pos;
 global.add_task_goto = function (pos) {
     global.task.rooms.sim.push({
@@ -46,6 +56,7 @@ module.exports.loop = function () {
             init_set.run(room);
         }
         room.cal_energy_available();
+        room.operate();
     }
 
     // for each creeps

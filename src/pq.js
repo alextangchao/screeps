@@ -12,7 +12,8 @@ module.exports =
         }
 
         empty() {
-            return this.size() === 0
+            // return this.size() === 0
+            return this.num === 0
         }
 
         size() {
@@ -105,5 +106,9 @@ module.exports =
 
         get_right_child(index) {
             return (index << 1) + 1;
+        }
+
+        toString() {
+            return "size:" + this.num
         }
     }
